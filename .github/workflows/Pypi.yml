@@ -4,18 +4,17 @@ on:
     branches: [master]
     
 jobs:
-  packages:
+  job1:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
     - id: set-matrix
-      run: echo "::set-output name=matrix::{\"package\":[$(ls | sed 's/.*/"&"/' | grep -v / | tr '\n' ',' | sed 's/.$//')]}"
-      working-directory: "python"
-  publish:
-    needs: packages
+      run: echo "::set-output name=matrix::{\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}"
+  job2:
+    needs: job1
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{fromJson(needs.packages.outputs.matrix)}}
+      matrix: ${{fromJson(needs.job1.outputs.matrix)}}
     steps:
-    - run: echo ${{ matrix.package }}
+    - run: echo foo
