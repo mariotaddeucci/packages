@@ -17,4 +17,4 @@ jobs:
     strategy:
       matrix: ${{fromJson(needs.job1.outputs.matrix)}}
     steps:
-    - run: echo foo
+    - run: echo ${{matrix.include}}
