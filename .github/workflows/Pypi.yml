@@ -17,4 +17,6 @@ jobs:
     strategy:
       matrix: ${{fromJson(needs.job1.outputs.matrix)}}
     steps:
-    - run: echo 'python/${{ matrix.package.project}}'
+      - name: Publishing package ${{ matrix.package.project }}
+        run: cat config.yml
+        working-directory: 'python/${{ matrix.package.project }}'
