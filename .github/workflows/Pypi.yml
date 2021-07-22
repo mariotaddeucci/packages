@@ -1,0 +1,23 @@
+name: build
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  packages:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - id: set-matrix
+      run: echo "::set-output name=matrix::{\"package\":[$(ls | sed 's/.*/"&"/' | grep -v / | tr '\n' ',' | sed 's/.$//')]}"
+      working-directory: "python"
+  publish:
+    needs: packages
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{fromJson(needs.packages.outputs.matrix)}}
+    steps:
+    - run: cat config.yml
+      working-directory: "python/${{ matrix.package }}"
