@@ -17,7 +17,8 @@ jobs:
     strategy:
       matrix: ${{fromJson(needs.job1.outputs.matrix)}}
     steps:
+      - name: Testing package ${{ matrix.package.project }}
+        run: ls
+
       - name: Publishing package ${{ matrix.package.project }}
-        run: |
-          ls
-          echo 'python/${{ matrix.package.project }}'
+        run: cat python/${{ matrix.package.project }}/config.yml
