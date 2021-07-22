@@ -17,6 +17,8 @@ jobs:
     strategy:
       matrix: ${{fromJson(needs.job1.outputs.matrix)}}
     steps:
+      - uses: actions/checkout@v2
+      
       - name: Testing package ${{ matrix.package.project }}
         run: ls
 
