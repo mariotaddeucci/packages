@@ -4,23 +4,27 @@ on:
     branches: [master]
     
 jobs:
-  job1:
+
+  packages:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
+    - uses: actions/checkout@v2
     - id: set-matrix
-      run: echo "::set-output name=matrix::{\"package\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}"
+      run: echo "::set-output name=matrix::{\"package\":[$(ls | sed 's/.*/"&"/' | grep -v / | tr '\n' ',' | sed 's/.$//')]}"
+      working-directory: "python"
+
   job2:
-    needs: job1
+    needs: packages
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{fromJson(needs.job1.outputs.matrix)}}
+      matrix: ${{fromJson(needs.packages.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v2
-      
-      - name: Testing package ${{ matrix.package.project }}
+
+      - name: Testing package ${{ matrix.package }}
         run: ls
 
-      - name: Publishing package ${{ matrix.package.project }}
-        run: cat python/${{ matrix.package.project }}/config.yml
+      - name: Publishing package ${{ matrix.package }}
+        run: cat python/${{ matrix.package }}/config.yml
