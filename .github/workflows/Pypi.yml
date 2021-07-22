@@ -17,4 +17,4 @@ jobs:
     strategy:
       matrix: ${{fromJson(needs.job1.outputs.matrix)}}
     steps:
-    - run: echo 'python/${{ matrix.package }}'
+    - run: echo 'python/${{ matrix.package.project}}'
