@@ -37,15 +37,7 @@ jobs:
         with:
           python-version: 3.7
       
-      - uses: dorny/paths-filter@v2
-        id: filter
-        with:
-          filters: |
-            changed:
-              - 'python/${{ matrix.package }}/**'
-      
       - name: Installing dependencies
-        if: steps.filter.outputs.changed == 'true'
         run: |
           python -m pip install --upgrade pip
           pip install flake8
@@ -53,7 +45,6 @@ jobs:
         working-directory: "python/${{ matrix.package }}"
 
       - name: Lint with flake8
-        if: steps.filter.outputs.changed == 'true'
         run: |
           # stop the build if there are Python syntax errors or undefined names
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
@@ -62,20 +53,22 @@ jobs:
         working-directory: "python/${{ matrix.package }}"
       
       - name: Test with Pytest
-        if: steps.filter.outputs.changed == 'true'
         run: if [ -f tests/test_*.py ]; then pip install pytest && pytest tests/ ; fi
         working-directory: "python/${{ matrix.package }}"
       
       - name: Test with Pytest
-        if: steps.filter.outputs.changed == 'true'
         run: if [ -f tests/test_*.py ]; then pip install pytest && pytest tests/ ; fi
         working-directory: "python/${{ matrix.package }}"
-      
-      - name: Check PyPi release
-        if: steps.filter.outputs.changed == 'true'
-        run: echo "PYPI_HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}\n" https://pypi.org/project/${{ matrix.package }}/0.0.3/)" >> $GITHUB_ENV
-        working-directory: "python/${{ matrix.package }}"
 
-      - name: Publish
-        if: ${{ env.PYPI_HTTP_STATUS == '404' && PUSH_PACKAGES }}
-        run: echo "Will update"
+      - name: Check PyPi release
+        if: ${{ PUSH_PACKAGES }}
+        run: |
+          pip install pyyaml requests
+          echo "PYPI_HTTP_STATUS=$(python check_release.py ${{ matrix.package }})" >> $GITHUB_ENV
+        working-directory: "python"
+
+      - name: Publish to PyPi
+        if: ${{ PYPI_HTTP_STATUS == '404' }}
+        run: |
+          echo 'publishing'
+        working-directory: "python"
