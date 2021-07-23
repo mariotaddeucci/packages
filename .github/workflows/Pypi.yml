@@ -62,7 +62,7 @@ jobs:
         working-directory: "python"
 
       - name: Publish to PyPi
-        if: ${{ PYPI_HTTP_STATUS == '404' }}
+        if: PYPI_HTTP_STATUS = '404'
         run: |
           echo 'publishing'
         working-directory: "python"
