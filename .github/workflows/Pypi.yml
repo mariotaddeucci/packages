@@ -65,5 +65,5 @@ jobs:
         working-directory: "python/${{ matrix.package }}"
 
       - name: Publish
-        if: ${{ env.PYPI_HTTP_STATUS == '404' }}
+        if: ${{ env.PYPI_HTTP_STATUS == '404' && PUSH_PACKAGES }}
         run: echo "Will update"
