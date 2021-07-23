@@ -1,8 +1,15 @@
-name: build
+name: Publish to PyPi
+
 on:
   pull_request:
     branches: [master]
-    
+    paths:
+      - python/**
+  push:
+    branches: [master]
+    paths:
+      - python/**
+
 jobs:
 
   packages:
@@ -15,9 +22,11 @@ jobs:
       run: echo "::set-output name=matrix::{\"package\":[$(find . -name config.yml -exec dirname {} \; | sed "s|^\./||" | sed 's/.*/"&"/' | grep -v / | tr '\n' ',' | sed 's/.$//')]}"
       working-directory: "python"
 
-  job2:
+  CI:
     needs: packages
     runs-on: ubuntu-latest
+    env:
+      PUSH_PACKAGES: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     strategy:
       matrix: ${{fromJson(needs.packages.outputs.matrix)}}
       
@@ -44,5 +53,14 @@ jobs:
         working-directory: "python/${{ matrix.package }}"
       
       - name: Test with Pytest
+        run: if [ -f tests/test_*.py ]; then pip install pytest && pytest tests/ ; fi
+        working-directory: "python/${{ matrix.package }}"
+      
+      - name: Test with Pytest
+        run: if [ -f tests/test_*.py ]; then pip install pytest && pytest tests/ ; fi
+        working-directory: "python/${{ matrix.package }}"
+      
+      - name: Publish
+        if: ${{ env.PUSH_PACKAGES }}
         run: if [ -f tests/test_*.py ]; then pip install pytest && pytest tests/ ; fi
         working-directory: "python/${{ matrix.package }}"
