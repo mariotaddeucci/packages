@@ -44,5 +44,5 @@ jobs:
         working-directory: "python/${{ matrix.package }}"
       
       - name: Test with Pytest
-        run: if [ -f tests/test_*.py ]; then pip install pytest & pytest tests/ ; fi
+        run: if [ -f tests/test_*.py ]; then pip install pytest && pytest tests/ ; fi
         working-directory: "python/${{ matrix.package }}"
