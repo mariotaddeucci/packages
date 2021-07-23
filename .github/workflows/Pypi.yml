@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - id: set-matrix
-      run: echo "::set-output name=matrix::{\"package\":[$(ls | sed 's/.*/"&"/' | grep -v / | tr '\n' ',' | sed 's/.$//')]}"
+      run: echo "::set-output name=matrix::{\"package\":[$(find . -name config.yml -exec dirname {} \; | sed "s|^\./||" | sed 's/.*/"&"/' | grep -v / | tr '\n' ',' | sed 's/.$//')]}"
       working-directory: "python"
 
   job2:
@@ -20,6 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{fromJson(needs.packages.outputs.matrix)}}
+      
     steps:
       - uses: actions/checkout@v2
 
