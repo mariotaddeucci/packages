@@ -3,12 +3,6 @@ name: Publish to PyPi
 on:
   pull_request:
     branches: [master]
-    paths:
-      - python/**
-  push:
-    branches: [master]
-    paths:
-      - python/**
 
 jobs:
 
