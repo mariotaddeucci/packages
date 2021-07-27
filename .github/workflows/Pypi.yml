@@ -60,12 +60,7 @@ jobs:
         id: pypi
 
       - name: Publish to PyPi
-        if: ${{ steps.pypi.outputs.HTTP_STATUS == '404' }}
+        if: steps.pypi.outputs.HTTP_STATUS == '404'
         run: |
           echo "The selected color is ${{ steps.pypi.outputs.HTTP_STATUS }}"
         working-directory: "python"
-      - name: Pulala
-        run: |
-          echo "The selected color is ${{ steps.pypi.outputs.HTTP_STATUS }}"
-        working-directory: "python"
-
