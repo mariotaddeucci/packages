@@ -1,2 +1,6 @@
-name: demo2
-version: '0.0.3'
+version: "0.0.4"
+description: "Uma biblioteca simples para consumir dados de ativos da bolsa de valores brasileira, B3."
+classifiers:
+  - "Programming Language :: Python :: 3"
+  - "License :: OSI Approved :: MIT License"
+  - "Operating System :: OS Independent"

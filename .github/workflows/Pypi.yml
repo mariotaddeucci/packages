@@ -53,7 +53,7 @@ jobs:
         working-directory: "python/${{ matrix.package }}"
 
       - name: Check PyPi release
-        if: github.ref == 'refs/heads/master'
+        # if: github.ref == 'refs/heads/master'
         run: |
           pip install pyyaml requests
           echo ::set-output name=HTTP_STATUS::$(python check_release.py ${{ matrix.package }})
@@ -63,5 +63,9 @@ jobs:
       - name: Publish to PyPi
         if: contains(steps.pypi.outputs.HTTP_STATUS, '404')
         run: |
-          echo "The selected color is ${{ steps.pypi.outputs.HTTP_STATUS }} lalala"
+          if [ ! -f ${{ matrix.package }}/__init__.py ]; echo > ${{ matrix.package }}/__init__.py ; fi
+          pip install twine setuptools wheel
+          python setup.py sdist ${{ matrix.package }}
+          python setup.py bdist_wheel ${{ matrix.package }}
+          ls
         working-directory: "python"
