@@ -60,5 +60,5 @@ jobs:
 
       - name: Publish to PyPi
         run: |
-          echo ${{PYPI_HTTP_STATUS}}
+          echo 'foo'
         working-directory: "python"
