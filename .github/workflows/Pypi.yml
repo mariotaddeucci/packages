@@ -15,17 +15,47 @@ jobs:
     - id: set-matrix
       run: echo "::set-output name=matrix::{\"package\":[$(find . -name config.yml -exec dirname {} \; | sed "s|^\./||" | sed 's/.*/"&"/' | grep -v / | tr '\n' ',' | sed 's/.$//')]}"
       working-directory: "python"
-
-  CI:
+  
+  pypi-pkg:
     needs: packages
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{fromJson(needs.packages.outputs.matrix)}}
+
+    outputs:
+      matrix: ${{ steps.pkg.outputs.name }}
       
     steps:
       - uses: actions/checkout@v2
+        with:
+            fetch-depth: 100
+
+      - uses: marceloprado/has-changed-path@v1
+        id: pkg
+        with:
+          paths: python/${{ matrix.package }}
+
+      - name: Checking for changes on python/${{ matrix.package }}
+        if: steps.pkg.outputs.changed == 'true'
+        run: echo "::set-output name=name::${{ matrix.package }}"
+      
+  CI:
+    needs: pypi-pkg
+    runs-on: ubuntu-latest
+      
+    steps:
+      - uses: actions/checkout@v2
+        with:
+            fetch-depth: 100
+
+      - uses: marceloprado/has-changed-path@v1
+        id: pkg
+        with:
+          paths: python/${{ needs.pkg.name }}
+            
       - name: Set up Python 3.7
         uses: actions/setup-python@v2
+        id: setup
         with:
           python-version: 3.7
       
@@ -34,7 +64,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install flake8
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        working-directory: "python/${{ matrix.package }}"
+        working-directory: "python/${{ needs.pkg.name }}"
 
       - name: Lint with flake8
         run: |
@@ -42,31 +72,31 @@ jobs:
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-        working-directory: "python/${{ matrix.package }}"
+        working-directory: "python/${{ needs.pkg.name }}"
       
       - name: Test with Pytest
         run: if [ -f tests/test_*.py ]; then pip install pytest && pytest tests/ ; fi
-        working-directory: "python/${{ matrix.package }}"
+        working-directory: "python/${{ needs.pkg.name }}"
       
       - name: Test with Pytest
         run: if [ -f tests/test_*.py ]; then pip install pytest && pytest tests/ ; fi
-        working-directory: "python/${{ matrix.package }}"
+        working-directory: "python/${{ needs.pkg.name }}"
 
       - name: Check PyPi release
         # if: github.ref == 'refs/heads/master'
         run: |
           pip install pyyaml requests
-          echo ::set-output name=HTTP_STATUS::$(python check_release.py ${{ matrix.package }})
+          echo ::set-output name=HTTP_STATUS::$(python check_release.py ${{ needs.pkg.name }})
         working-directory: "python"
         id: pypi
 
       - name: Publish to PyPi
         if: contains(steps.pypi.outputs.HTTP_STATUS, '404')
         run: |
-          cp setup.py ${{ matrix.package }}/setup.py
-          cd ${{ matrix.package }}
+          cp setup.py ${{ needs.pkg.name }}/setup.py
+          cd ${{ needs.pkg.name }}
           pip install twine setuptools wheel
           python setup.py sdist
           python setup.py bdist_wheel
-          ls
+          twine upload dist/* -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_TOKEN }}
         working-directory: "python"
