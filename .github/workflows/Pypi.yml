@@ -19,8 +19,6 @@ jobs:
   CI:
     needs: packages
     runs-on: ubuntu-latest
-    env:
-      PUSH_PACKAGES: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     strategy:
       matrix: ${{fromJson(needs.packages.outputs.matrix)}}
       
@@ -55,7 +53,6 @@ jobs:
         working-directory: "python/${{ matrix.package }}"
 
       - name: Check PyPi release
-        if: ${{ PUSH_PACKAGES }}
         run: |
           pip install pyyaml requests
           echo "PYPI_HTTP_STATUS=$(python check_release.py ${{ matrix.package }})" >> $GITHUB_ENV
