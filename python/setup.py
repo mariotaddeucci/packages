@@ -15,7 +15,7 @@ if path.exists("requirements.txt"):
 else:
     requirements = []
 
-with open("/config.yml", 'r') as stream:
+with open("config.yml", 'r') as stream:
     configs = yaml.safe_load(stream)
 
 setup(
