@@ -53,6 +53,7 @@ jobs:
         working-directory: "python/${{ matrix.package }}"
 
       - name: Check PyPi release
+        if: github.ref == 'refs/heads/master'
         run: |
           pip install pyyaml requests
           echo ::set-output name=HTTP_STATUS::$(python check_release.py ${{ matrix.package }})
