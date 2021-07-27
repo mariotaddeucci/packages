@@ -1,24 +1,21 @@
 
 from setuptools import setup
 import yaml
-from sys import argv
 from os import path
 
 
-name = argv[2]
+name = path.abspath(path.dirname(__file__)).split('/')[-1]
 
-with open(f"{name}/README.md", "r") as fh:
+with open("README.md", "r") as fh:
     long_description = fh.read()
 
-requirements_uri = f"{name}/requirements.txt"
-
-if path.exists(requirements_uri):
-    with open(requirements_uri, "r") as f:
+if path.exists("requirements.txt"):
+    with open("requirements.txt", "r") as f:
         requirements = f.readlines()
 else:
     requirements = []
 
-with open(f"{name}/config.yml", 'r') as stream:
+with open("/config.yml", 'r') as stream:
     configs = yaml.safe_load(stream)
 
 setup(

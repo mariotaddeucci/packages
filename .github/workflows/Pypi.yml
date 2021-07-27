@@ -63,9 +63,10 @@ jobs:
       - name: Publish to PyPi
         if: contains(steps.pypi.outputs.HTTP_STATUS, '404')
         run: |
-          if [ ! -f ${{ matrix.package }}/__init__.py ]; echo > ${{ matrix.package }}/__init__.py ; fi
+          cp setup.py ${{ matrix.package }}/setup.py
+          cd ${{ matrix.package }}
           pip install twine setuptools wheel
-          python setup.py sdist ${{ matrix.package }}
-          python setup.py bdist_wheel ${{ matrix.package }}
+          python setup.py sdist
+          python setup.py bdist_wheel
           ls
         working-directory: "python"
