@@ -55,12 +55,12 @@ jobs:
       - name: Check PyPi release
         run: |
           pip install pyyaml requests
-          echo '::set-output name=HTTP_STATUS::$(python check_release.py ${{ matrix.package }})'
+          echo ::set-output name=HTTP_STATUS::$(python check_release.py ${{ matrix.package }})
         working-directory: "python"
         id: pypi
 
       - name: Publish to PyPi
-        if: steps.pypi.outputs.HTTP_STATUS == 404
+        if: contains(steps.pypi.outputs.HTTP_STATUS, '404')
         run: |
           echo "The selected color is ${{ steps.pypi.outputs.HTTP_STATUS }}"
         working-directory: "python"
