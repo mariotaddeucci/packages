@@ -23,7 +23,7 @@ jobs:
       matrix: ${{fromJson(needs.packages.outputs.matrix)}}
 
     outputs:
-      matrix: ${{ steps.pkg.outputs.name }}
+      name: ${{ steps.pkg.outputs.name }}
       
     steps:
       - uses: actions/checkout@v2
@@ -39,23 +39,14 @@ jobs:
         if: steps.pkg.outputs.changed == 'true'
         run: echo "::set-output name=name::${{ matrix.package }}"
       
-  CI:
+  Deploy:
     needs: pypi-pkg
     runs-on: ubuntu-latest
       
     steps:
       - uses: actions/checkout@v2
-        with:
-            fetch-depth: 100
-
-      - uses: marceloprado/has-changed-path@v1
-        id: pkg
-        with:
-          paths: python/${{ needs.pypi-pkg.outputs.name }}
-            
       - name: Set up Python 3.7
         uses: actions/setup-python@v2
-        id: setup
         with:
           python-version: 3.7
       
