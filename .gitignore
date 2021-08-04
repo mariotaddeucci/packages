@@ -128,3 +128,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .DS_Store
+config.local.sh
+python/serverless-pypiserver/packages/
