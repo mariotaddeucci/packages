@@ -1,3 +1,4 @@
+#!/bin/bash
 cwd=$(pwd)
 cd "$(dirname "$0")"
 . ./../../scripts/pre-commit.sh

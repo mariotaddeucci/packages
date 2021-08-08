@@ -15,7 +15,7 @@ else:
     requirements = []
 
 with open("config.yml", "r") as stream:
-    configs = yaml.safe_load(stream)    
+    configs = yaml.safe_load(stream)        
 
 setup(
     name=name,
