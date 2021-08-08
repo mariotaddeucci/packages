@@ -1,11 +1,7 @@
-
-
-
-
-
-from setuptools import setup
 from os import path
+
 import yaml
+from setuptools import setup
 
 name = path.abspath(path.dirname(__file__)).split("/")[-1]
 
