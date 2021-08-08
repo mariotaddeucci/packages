@@ -1,5 +1,7 @@
 #!/bin/bash
 cwd=$(pwd)
 cd "$(dirname "$0")"
-echo . ./pre_commit.sh > ../.git/hooks/pre-commit.sh
+git config advice.ignoredHook false
+[ -e ../.git/hooks/pre-commit ] && rm -- ../.git/hooks/pre-commit
+cp -p _pre-commit ../.git/hooks/pre-commit
 cd ${cwd}
