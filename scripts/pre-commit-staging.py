@@ -3,7 +3,7 @@ import shutil
 from sys import argv
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-TMP_DIRNAME = "tmp_pre_commit"
+TMP_DIRNAME = "pre_commit"
 TMP_URI = os.path.join(BASE_DIR, TMP_DIRNAME)
 
 
