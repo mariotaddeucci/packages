@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 .DS_Store
 config.local.sh
-python/serverless-pypiserver/packages/
+packages/serverless-pypiserver/packages/
