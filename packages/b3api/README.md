@@ -24,7 +24,7 @@ Essa é uma biblioteca gratuita e não oficial para buscar de ativos listados na
 
     pip install b3api
 
-## Utilizando a biblioteca em código 
+## Utilizando a biblioteca em código
 
 ### Lista de ativos
 
@@ -59,7 +59,7 @@ Essa é uma biblioteca gratuita e não oficial para buscar de ativos listados na
 		{ ... },
 		...
 	]
-	
+
 ### Lista filtrada de ativos
 
 	import b3api
@@ -133,7 +133,7 @@ Essa é uma biblioteca gratuita e não oficial para buscar de ativos listados na
 	    "ticker": "ITSA4"
 	}
 
-###  Buscar um ativo inválido 
+###  Buscar um ativo inválido
 
 	import b3api
 	data = b3api.assets.get('InvalidTicker')
@@ -145,7 +145,7 @@ Essa é uma biblioteca gratuita e não oficial para buscar de ativos listados na
 	    "reason": "Not found"
 	}
 
-## Utilizando a biblioteca via CLI 
+## Utilizando a biblioteca via CLI
 
 ### Parâmetros:
 - **-o** ou **--output**: nome do arquivo que será gerado com as solicitadas. Default: output.json
@@ -154,7 +154,7 @@ Essa é uma biblioteca gratuita e não oficial para buscar de ativos listados na
 ### Exemplos
 
 ####  Retorna todos os ativos para o arquivo output.json
-	python -m b3api 
+	python -m b3api
 
 ####  Retorna todos os ativos para o arquivo data.json
 	python -m b3api -o data.json
