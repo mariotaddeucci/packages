@@ -35,9 +35,7 @@ class Bucket:
         prefix = pkg_name or ""
         prefix = Bucket._packages_dir + prefix
 
-        all_files = Bucket._s3.list_objects(
-            Bucket=Bucket._bucket, Prefix=prefix, Delimiter="/"
-        ).get("Contents", [])
+        all_files = Bucket._s3.list_objects(Bucket=Bucket._bucket, Prefix=prefix, Delimiter="/").get("Contents", [])
 
         for f in all_files:
 

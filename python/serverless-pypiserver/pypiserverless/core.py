@@ -8,8 +8,7 @@ import os
 import re
 
 _archive_suffix_rx = re.compile(
-    r"(\.zip|\.tar\.gz|\.tgz|\.tar\.bz2|-py[23]\.\d-.*|"
-    r"\.win-amd64-py[23]\.\d\..*|\.win32-py[23]\.\d\..*|\.egg)$",
+    r"(\.zip|\.tar\.gz|\.tgz|\.tar\.bz2|-py[23]\.\d-.*|" r"\.win-amd64-py[23]\.\d\..*|\.win32-py[23]\.\d\..*|\.egg)$",
     re.I,
 )
 wheel_file_re = re.compile(
@@ -19,9 +18,7 @@ wheel_file_re = re.compile(
     re.VERBOSE,
 )
 _pkgname_re = re.compile(r"-\d+[a-z_.!+]", re.I)
-_pkgname_parts_re = re.compile(
-    r"[\.\-](?=cp\d|py\d|macosx|linux|sunos|solaris|irix|aix|cygwin|win)", re.I
-)
+_pkgname_parts_re = re.compile(r"[\.\-](?=cp\d|py\d|macosx|linux|sunos|solaris|irix|aix|cygwin|win)", re.I)
 
 
 def _guess_pkgname_and_version_wheel(basename):
