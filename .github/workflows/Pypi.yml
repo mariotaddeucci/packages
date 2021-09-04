@@ -17,13 +17,13 @@ jobs:
     - id: set-matrix
       run: echo "::set-output name=matrix::{\"package\":[$(find . -name config.yml -exec dirname {} \; | sed "s|^\./||" | sed 's/.*/"&"/' | grep -v / | tr '\n' ',' | sed 's/.$//')]}"
       working-directory: "packages"
-  
+
   Deploy:
     needs: packages
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{fromJson(needs.packages.outputs.matrix)}}
-      
+
     steps:
       - uses: actions/checkout@v2
         with:
@@ -48,20 +48,6 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         working-directory: "packages/${{ matrix.package }}"
 
-      - name: Lint with flake8
-        if: steps.pkg.outputs.changed == 'true'
-        run: |
-          # stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-        working-directory: "packages/${{ matrix.package }}"
-      
-      - name: Test with Pytest
-        if: steps.pkg.outputs.changed == 'true'
-        run: if [ -f tests/test_*.py ]; then pip install pytest && pytest tests/ ; fi
-        working-directory: "packages/${{ matrix.package }}"
-      
       - name: Test with Pytest
         if: steps.pkg.outputs.changed == 'true'
         run: if [ -f tests/test_*.py ]; then pip install pytest && pytest tests/ ; fi

@@ -1,0 +1,6 @@
+version: "0.0.1"
+description: "An implementation of PyPi server to run on serverless infrastructure"
+classifiers:
+  - "Programming Language :: Python :: 3"
+  - "License :: OSI Approved :: MIT License"
+  - "Operating System :: OS Independent"
