@@ -3,7 +3,7 @@ import requests
 
 def get_endpoint(endpoint):
     REST_API = "https://b3api.vercel.app/api/"
-    return "{}{}/".format(REST_API, endpoint.strip("/"))
+    return f"{REST_API}{endpoint.strip('/')}/"
 
 
 def get(ticker):
